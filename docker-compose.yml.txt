@@ -1,0 +1,29 @@
+
+version: '3.8'
+services:
+  mysql-container:
+    image: mysql:8
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: foodboxdb;
+    ports:
+      - 3307:3306
+    restart: always
+
+ springboot-container:
+    #build: . ./backend/
+    image: Angular-spring-boot:v1
+    container_name: springboot-container 
+    depends_on:
+      - mysql-db
+    ports:
+      - 9090:8080
+    restart: always
+
+  angular-container:
+    build: ./frontend/
+    container_name: angular-container
+    ports:
+      - 80:80
+    restart: always 
