@@ -6,8 +6,8 @@ pipeline {
             steps {
                 script {
                     // Set up environment to use Angular CLI and Node.js
-                    def npmHome = tool name: 'NodeJS 18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-                    env.PATH = "${npmHome}/bin:${env.PATH}"
+                  //  def npmHome = tool name: 'NodeJS 18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                  //  env.PATH = "${npmHome}/bin:${env.PATH}"
 
                     // Install npm dependencies
                     sh 'npm ci'
