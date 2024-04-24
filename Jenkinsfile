@@ -10,7 +10,7 @@ pipeline {
 
                     // Build Angular app for production
                    // Set up environment to use Angular CLI
-                    def npmHome = tool name: 'NodeJS 14', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    def npmHome = tool , type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                     env.PATH = "${npmHome}/bin:${env.PATH}"
                     sh 'ng build'  // Execute ng build command
                 }
