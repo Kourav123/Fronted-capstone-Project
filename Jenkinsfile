@@ -19,7 +19,7 @@ pipeline {
 
 
                     // Build Angular project
-                   sh 'ng serve'
+                   sh 'ng build'
                 }
             }
         }
