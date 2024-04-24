@@ -23,15 +23,18 @@ pipeline {
                 }
             }
         }
-     stage('Docker Build') {
-    steps {
-        script {
-            // Example Docker build command
-            docker.build('my-docker-image:latest', '.')
+      stage("run the docker containers"){
+            steps{
+                sh "docker-compose down"
+                sh "docker-compose up --build -d"       
+            }
         }
-    }
-}
-
+        stage("Check images and runnign containers"){
+            steps{
+                sh "docker images"
+                sh "docker ps"       
+            }
+        }
         stage('Deploy to AWS') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
