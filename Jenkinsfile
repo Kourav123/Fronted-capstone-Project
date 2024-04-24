@@ -17,6 +17,7 @@ pipeline {
 
                     // Build Angular project
                     sh 'ng build'
+                }
             }
         }
         stage('Docker Build') {
