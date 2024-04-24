@@ -2,6 +2,16 @@ pipeline {
     agent any
 
     stages {
+        stage('Prepare Environment') {
+            steps {
+                // Install Node.js and npm
+                script {
+                    tool 'nodejs' // Assumes Node.js tool is configured in Jenkins
+                    sh 'npm install -g @angular/cli'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
