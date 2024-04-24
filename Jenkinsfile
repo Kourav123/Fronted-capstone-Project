@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Install Node.js and npm
                 script {
-                    tool 'nodejs' // Assumes Node.js tool is configured in Jenkins
+                     tool 'NodeJS' // Assumes Node.js tool is configured in Jenkins
                     sh 'npm install -g @angular/cli'
                 }
             }
