@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+  environment {
+        PATH = "$PATH:/path/to/npm/directory"
+    }
     stages {
         stage('Build') {
             steps {
