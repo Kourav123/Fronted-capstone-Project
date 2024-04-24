@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Verify Node.js and npm versions
                 sh 'node --version'
-                sh 'npm --version'
+                //sh 'npm --version'
 
                 // Install Angular CLI globally
                 sh 'npm install -g @angular/cli'
