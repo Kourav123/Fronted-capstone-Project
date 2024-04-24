@@ -23,14 +23,15 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build') {
-            steps {
-                script {
-                    // Example Docker build command
-                    docker.build('my-docker-image:latest', '.')
-                }
-            }
+     stage('Docker Build') {
+    steps {
+        script {
+            // Example Docker build command
+            docker.build('my-docker-image:latest', '.')
         }
+    }
+}
+
         stage('Deploy to AWS') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
