@@ -13,7 +13,10 @@ pipeline {
                     sh 'npm ci'
 
                     // Install Angular CLI (if not already installed)
-                    sh 'npm install -g @angular/cli'
+                    sh 'npm config set prefix ~/.npm-global'
+                       sh 'export PATH=~/.npm-global/bin:$PATH'
+                      sh 'npm install -g @angular/cli'
+
 
                     // Build Angular project
                     sh 'ng build'
