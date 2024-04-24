@@ -1,54 +1,58 @@
-pipeline {
-    agent any
+#!groovy
 
-    stages {
-        stage('Prepare Environment') {
-            steps {
-                // Install Node.js and npm
-                script {
-                     tool 'NodeJS' // Assumes Node.js tool is configured in Jenkins
-                    sh 'npm install -g @angular/cli'
-                }
-            }
+properties(
+    [
+        [$class: 'BuildDiscarderProperty', strategy:
+          [$class: 'LogRotator', artifactDaysToKeepStr: '14', artifactNumToKeepStr: '5', daysToKeepStr: '30', numToKeepStr: '60']],
+        pipelineTriggers(
+          [
+              pollSCM('H/15 * * * *'),
+              cron('@daily'),
+          ]
+        )
+    ]
+)
+node {
+    stage('Checkout') {
+        //disable to recycle workspace data to save time/bandwidth
+        deleteDir()
+        checkout scm
+
+        //enable for commit id in build number
+        //env.git_commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
+        //env.git_commit_id_short = env.git_commit_id.take(7)
+        //currentBuild.displayName = "#${currentBuild.number}-${env.git_commit_id_short}"
+    }
+
+    stage('NPM Install') {
+        withEnv(["NPM_CONFIG_LOGLEVEL=warn"]) {
+            sh 'npm install'
         }
+    }
 
-        stage('Build') {
-            steps {
-                script {
-                    // Clean and install dependencies
-                    sh 'npm ci'
-
-                    // Build Angular app for production
-                    sh 'ng build --prod'
-                }
-            }
+    stage('Test') {
+        withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
+          sh 'ng test --progress=false --watch false'
         }
+        junit '**/test-results.xml'
+    }
 
-        stage('Docker Build') {
-            steps {
-                script {
-                    // Build Docker image
-                    docker.build('angular-app:latest', '.')
+    stage('Lint') {
+        sh 'ng lint'
+    }
 
-                    // Optionally, you can push the image to a Docker registry here
-                }
-            }
-        }
+    stage('Build') {
+        milestone()
+        sh 'ng build --prod --aot --sm --progress=false'
+    }
 
-        stage('Deploy to AWS') {
-            environment {
-                AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-                AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-                AWS_DEFAULT_REGION = 'us-east-1' // Update with your AWS region
-            }
-            steps {
-                script {
-                    // Deploy Docker containers using docker-compose
-                    docker.withRegistry('https://example-registry-url.com', 'docker-registry-credentials') {
-                        sh 'docker-compose up -d'
-                    }
-                }
-            }
-        }
+    stage('Archive') {
+        sh 'tar -cvzf dist.tar.gz --strip-components=1 dist'
+        archive 'dist.tar.gz'
+    }
+
+    stage('Deploy') {
+        milestone()
+        echo "Deploying..."
     }
 }
