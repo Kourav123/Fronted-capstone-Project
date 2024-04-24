@@ -9,7 +9,7 @@ pipeline {
                     sh 'npm ci'
 
                     // Build Angular app for production
-                    sh 'ng build --prod'
+                    sh 'ng build'
                 }
             }
         }
