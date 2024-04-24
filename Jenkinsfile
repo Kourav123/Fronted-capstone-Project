@@ -9,21 +9,19 @@ pipeline {
                     sh 'npm ci'
 
                   
+                  // Build Angular project
+                    sh 'ng build'
                 }
             }
         }
-
         stage('Docker Build') {
             steps {
                 script {
-                    // Build Docker image
-                    docker.build('angular-app:latest', '.')
-
-                    // Optionally, you can push the image to a Docker registry here
+                    // Example Docker build command
+                    docker.build('my-docker-image:latest', '.')
                 }
             }
         }
-
         stage('Deploy to AWS') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
