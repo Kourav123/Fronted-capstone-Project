@@ -5,13 +5,18 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Clean and install dependencies
+                    // Set up environment to use Angular CLI and Node.js
+                    def npmHome = tool name: 'NodeJS 18', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${npmHome}/bin:${env.PATH}"
+
+                    // Install npm dependencies
                     sh 'npm ci'
 
-                  
-                  // Build Angular project
+                    // Install Angular CLI (if not already installed)
+                    sh 'npm install -g @angular/cli'
+
+                    // Build Angular project
                     sh 'ng build'
-                }
             }
         }
         stage('Docker Build') {
